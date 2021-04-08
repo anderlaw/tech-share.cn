@@ -8,6 +8,18 @@ app.use(express.static('static'))
 app.use(cookieParser())
 app.use(userAuth)
 
+
+//此处处理老版URL的301
+app.use(function forceLiveDomain(req, res, next) {
+  const route_path = req.route.path;
+  const id = req.query.id;
+  if(route_path == '/article-content'){
+    //文章内容页
+    return res.redirect(301, 'https://www.tech-share.cn/article/'+id);
+  }
+  next();
+});
+
 // render 函数
 const renderArticleContent = require('./renders/article-content')
 const renderArticleList = require('./renders/article-list')
