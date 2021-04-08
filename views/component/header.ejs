@@ -1,0 +1,96 @@
+<header>
+  <div class="wrapper">
+    <section class="left">
+      <!-- logo here -->
+      <h1 class="logo-wrap">
+        <a href="/" id="logo">
+          <span class="primary">Tech& Share</span>
+          <span class="secondary"> 代码改变世界</span>
+        </a>
+      </h1>
+      <!-- menu-bar -->
+      <div class="menu-bar">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+      </div>
+      <!-- main-nav -->
+      <nav class="main-nav">
+        <ul>
+          <li>
+            <a href="/article-list?category_code=0">技术文章</a>
+            <span class="divider">|</span>
+            <a href="/column">专栏</a>
+          </li>
+          <li>
+            <a href="/article-list?category_code=1">随笔</a>
+          </li>
+          <li>
+            <a href="/project/index.html" target="new_window">个人作品</a>
+          </li>
+        </ul>
+      </nav>
+    </section>
+    <section class="right">
+      <input
+        id="search"
+        class="search-input"
+        type="text"
+        placeholder="请输入关键查询博文"
+      />
+    </section>
+  </div>
+</header>
+<aside class="left-menu">
+  <div class="base-layer"></div>
+  <div class="wrap">
+    <nav>
+      <a href="/" id="second-logo">
+        <span class="primary">Tech & Share </span>
+        <span class="secondary"> 代码改变世界</span>
+      </a>
+      <ul>
+        <li>
+          <a href="/article-list?category_code=0">技术文章</a>
+          <span class="divider">|</span>
+          <a href="/column">专栏</a>
+        </li>
+        
+        <li>
+          <a href="/article-list?category_code=1">随笔</a>
+        </li>
+        <li>
+          <a href="/project/index.html" target="new_window">个人作品</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+<!-- 脚本 -->
+<script>
+  const menuBar = document.querySelector(".menu-bar");
+  const leftMenuBase = document.querySelector(".base-layer");
+  menuBar.onclick = function () {
+    document.querySelector(".left-menu").classList.add("open");
+  };
+  leftMenuBase.onclick = function () {
+    document.querySelector(".left-menu").classList.remove("open");
+  };
+  // 文章检索
+  initSearchFn();
+  function initSearchFn() {
+    var timer = null;
+    document.querySelector("#search").addEventListener("keyup", function (ev) {
+      if (ev.keyCode === 13) {
+        //enter键入
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          location.href =
+            location.href.split(location.pathname)[0] +
+            "/search?keyword=" +
+            ev.target.value;
+        }, 300);
+      }
+    });
+  }
+</script>

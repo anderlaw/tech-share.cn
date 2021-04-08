@@ -1,0 +1,133 @@
+.article-box {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 30px;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0 16px;
+  // &::before,
+  // &::after {
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   content: "";
+  //   width: 24px;
+  //   background-image: url(../images/grass.png);
+  //   background-size: contain;
+  //   background-repeat: repeat-y;
+  // }
+  // &::before {
+  //   left: 0;
+  // }
+  // &::after {
+  //   right: 0;
+  // }
+  .article-item {
+    border-bottom: 1px solid #f0f2f5;
+    margin-bottom: 20px;
+    & > .item-name {
+      .mark {
+        color: #fc5531;
+        background-color: #fff5f2;
+        font-size: 13px;
+        vertical-align: middle;
+        &.column{
+          color: #04afe2;
+        }
+        &.copy{
+          color: #d90cec;
+        }
+      }
+      margin-bottom: 10px;
+      margin-top: 0px;
+      a {
+        color: rgba(16, 16, 16, 0.78);
+        font-size: 18px;
+        text-decoration: none;
+        transition: color 0.2s ease-out;
+        &:hover {
+          color: rgba(16, 16, 16, 1);
+          text-decoration: underline;
+        }
+      }
+    }
+    .item-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .left {
+        & > .item-desc {
+          color: #757575;
+          font-size: 15px;
+          line-height: 22px;
+          margin: 11px 0;
+        }
+        & > .item-info {
+          color: #777;
+          font-size: 12px;
+          line-height: 22px;
+        }
+        & > .item-tagbox {
+          color: #777;
+          font-size: 14px;
+          line-height: 22px;
+          margin-top: 0px;
+          a {
+            color: inherit;
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+      .right {
+        margin-left: 60px;
+        img {
+          max-height: 100px;
+        }
+        @media screen and(max-width:600px) {
+          & {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .page-item {
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .back {
+      background-image: url(../images/arrow-back.png);
+      width: 50px;
+      height: 50px;
+    }
+    .forward {
+      background-image: url(../images/arrow-forward.png);
+      width: 50px;
+      height: 50px;
+    }
+    .pager {
+      background-image: url(../images/muzhuang.png);
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      color: #f9f9f9;
+      font-size: 16px;
+      line-height: 40px;
+      text-decoration: none;
+      &.active {
+        color: #fbfb23;
+      }
+    }
+  }
+}

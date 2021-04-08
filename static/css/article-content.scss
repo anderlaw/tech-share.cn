@@ -1,0 +1,34 @@
+
+.article-content {
+  max-width: 900px;
+  margin: 0 auto;
+  .article-name {
+    color: #333;
+    font-size: 26px;
+  }
+  .article-desc {
+    font-size: 16px;
+    color: #404040;
+    line-height: 1.8;
+  }
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ml {
+  .indent1 {
+    margin-left: 16px;
+  }
+  .indent2 {
+    margin-left: 32px;
+  }
+  .indent3 {
+    margin-left: 48px;
+  }
+  .indent4 {
+    margin-left: 64px;
+  }
+  .indent5 {
+    margin-left: 80px;
+  }
+}

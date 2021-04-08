@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>钛科界 Tech& Share 专注IT技术分享</title>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <meta name="description" content="技术博客,前端、后端技术分享,高级前端工程师">
+    <!-- 基础样式 -->
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/editor.css" />
+    <!-- 文章列表相关样式，文章页、专栏列表页、专栏内容页（包含文章列表），检索结果页 -->
+    <% if(route_path === '/' || route_path === '/article-list' || route_path === '/column' || route_path == '/column/:id'|| route_path == '/search'){ %>
+    <link rel="stylesheet" href="/css/article-list.css" />
+    <% }%>
+  </head>
+  <body>
+    <%- include('./component/header.ejs') %> 
+    <% if (route_path == '/article/:id') { %>
+      <!-- 文章内容 -->
+      <%- include('./component/article-content.ejs') %>
+    <%}else if(route_path === '/'){ %>
+      <!-- 首页 -->
+      <div class="article-box">
+        <% articles.forEach(function(article){ %> 
+          <%- include('./component/post-item.ejs', {post: article,isColumn:article.column_id ? true:false}) %> 
+        <% }); %>
+      </div>
+    <%}else if(route_path === '/article-list'){ %>
+      <!-- 文章列表页 -->
+      <div class="article-box">
+        <% articles.forEach(function(article){ %> 
+          <%- include('./component/post-item.ejs', {post: article,isColumn:false}) %> 
+        <% }); %>
+        <!-- 分页检索 -->
+        <div class="pagination">
+          <%- pagination %>
+        </div>
+        <!-- 没有数据 -->
+        <% if(articles.length === 0){ %>
+          <h3>暂无数据！</h3>
+        <% }%>
+      </div>
+      <%}else if(route_path === '/search'){ %>
+        <!-- 检索页 -->
+        <div class="article-box">
+          <% articles.forEach(function(article){ %> 
+            <%- include('./component/post-item.ejs', {post: article,isColumn:article.column_id ? true:false}) %> 
+          <% }); %>
+          <!-- 分页检索 -->
+          <div class="pagination">
+            <%- pagination %>
+          </div>
+          <!-- 没有数据 -->
+          <% if(articles.length === 0){ %>
+            <h3>暂无数据！</h3>
+          <% }%>
+        </div>
+    <%}else if(route_path === '/column'){ %>
+      <!-- 专栏 -->
+      <div class="article-box">
+        <p style="text-align: right;">
+
+          <% if(isLogged){ %>
+            <button class="link">
+              <a href="/manage/create-column">+创建专栏</a>
+            </button>
+          <% }%>
+        </p>
+        <% columns.forEach(function(column){ %> 
+          <%- include('./component/post-item.ejs', {post: column,isColumn:true}) %> 
+        <% }); %>
+        <!-- 分页检索 -->
+        <div class="pagination">
+          <%- pagination %>
+        </div>
+        <!-- 没有数据 -->
+        <% if(columns.length === 0){ %>
+          <h3>暂无数据！</h3>
+        <% }%>
+      </div>
+      <%}else if(route_path === '/column/:id'){ %>
+        <!-- 专栏内容页 -->
+        <div style="background-color: #fff;box-shadow: rgba(18,18,18,.10) 0 1px 3px 0px;padding:16px 0;">
+          <div style="max-width: 900px;padding:0 16px;box-sizing:border-box;margin:0 auto;">
+            <img style="max-width: 400px;" src="<%= imgBaseUrl + column.covername %>" alt="">
+            <h1><%= column.title %></h1>
+            <p><%= column.description %></p>
+            <p>
+              <span style="color: #919DA9;margin-right: 20px;">
+                文章数：<%= articles.length %>
+              </span>
+              <% if(isLogged){ %>
+                <button class="link">
+                  <a  href="/manage/create-post?column_id=<%= column.id %>">+发布专栏文章</a>
+                </button>
+              <% }%>
+              
+              </p>
+          </div>
+        </div>
+        <div class="article-box">
+          <% articles.forEach(function(article){ %> 
+            <%- include('./component/post-item.ejs', {post: article,isColumn:false}) %> 
+          <% }); %>
+          <!-- 没有数据 -->
+          <% if(articles.length === 0){ %>
+            <h3>暂无数据！</h3>
+          <% }%>
+        </div>
+    <% } %>
+  </body>
+</html>

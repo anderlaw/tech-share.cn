@@ -1,0 +1,44 @@
+<article class="article-item">
+  <h2 class="item-name">
+    <% if(isColumn){%>
+      <span class="mark column">
+        专栏
+      </span>
+      <a href="/column/<%= post.id %>">
+        <%= post.title %>
+      </a>
+    <%}else{%>
+      <span class="mark">
+        原创
+      </span>
+      <a href="/article/<%= post.id %>">
+        <%= post.title %>
+      </a>
+    <%}%>
+    
+  </h2>
+  <div class="item-content">
+    <div class="left">
+      <div class="item-info">
+        发布于 <%= new Date(post.postdate).toLocaleString() %>
+        &nbsp; 
+        阅读（<%= post.viewcount %>）
+      </div>
+      <p class="item-desc">
+        <%= post.description %>
+      </p>
+      <% if(post.label) {%>
+        <p class="item-tagbox">
+          标签:
+          <% post.label.split(",").forEach(function(label_name){ %> 
+            <a href="#"><%= label_name %></a>
+          <% }); %>
+        </p>
+      <%}%>
+      
+    </div>
+    <div class="right">
+      <img src="<%= imgBaseUrl + post.covername %>" alt="">
+    </div>
+  </div>
+</article>
