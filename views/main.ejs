@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>钛科界 Tech& Share 专注IT技术分享</title>
+    
+    <% if (route_path && route_path == '/article/:id') { %>
+      <!-- 显示文章标题 -->
+      <title><%=  article.title %></title>
+    <%}else if(route_path && route_path === '/column/:id'){ %>
+      <!-- 显示专栏标题 -->
+      <title><%= column.title %></title>
+    <%}else{ %>
+      <!-- 默认标题 -->
+      <title>Tech&Share-专注IT技术分享</title>
+    <%} %>
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
     <meta name="description" content="技术博客,前端、后端技术分享,高级前端工程师">
     <!-- 基础样式 -->
@@ -15,6 +25,15 @@
     <% if(route_path === '/' || route_path === '/article-list' || route_path === '/column' || route_path == '/column/:id'|| route_path == '/search'){ %>
     <link rel="stylesheet" href="/css/article-list.css" />
     <% }%>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DS0PMB7L71"></script>
+    <!-- GA全局代码 -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-DS0PMB7L71');
+    </script>
   </head>
   <body>
     <%- include('./component/header.ejs') %> 

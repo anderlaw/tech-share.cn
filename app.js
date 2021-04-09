@@ -11,9 +11,9 @@ app.use(userAuth)
 
 //此处处理老版URL的301
 app.use(function forceLiveDomain(req, res, next) {
-  const route_path = req.route.path;
+  const url = req.originalUrl;
   const id = req.query.id;
-  if(route_path == '/article-content'){
+  if(url.indexOf('/article-content')=== 0){
     //文章内容页
     return res.redirect(301, 'https://www.tech-share.cn/article/'+id);
   }
