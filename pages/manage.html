@@ -100,7 +100,6 @@
 
     <script src="https://unpkg.com/cos-js-sdk-v5/dist/cos-js-sdk-v5.min.js"></script>
     <script>
-     
       fetch("/api/column")
         .then(function (response) {
           return response.json();
@@ -117,9 +116,11 @@
               "[name='column_id']",
             ).innerHTML += htmlString;
 
-             //填充专栏项（如果是专栏文章）
-      var mathRes = location.search.match(/column_id=(\d+)/);
-      mathRes && (mathRes = mathRes[1]) != null && (document.querySelector("[name='column_id']").value = mathRes);
+            //填充专栏项（如果是专栏文章）
+            var mathRes = location.search.match(/column_id=(\d+)/);
+            mathRes &&
+              (mathRes = mathRes[1]) != null &&
+              (document.querySelector("[name='column_id']").value = mathRes);
           }
         });
       // cos示例
@@ -215,7 +216,10 @@
                   })
                   .then(function (data) {
                     if (data.success) {
-                      alert("发布成功！");
+                      sendNewLinkToBaidu(data.articleId).then((res) => {
+                        console.log(res);
+                        alert("发布成功！");
+                      });
                     }
                   });
               });
@@ -231,7 +235,10 @@
               })
               .then(function (data) {
                 if (data.success) {
-                  alert("发布成功！");
+                  sendNewLinkToBaidu(data.articleId).then((res) => {
+                    console.log(res);
+                    alert("发布成功！");
+                  });
                 }
               });
           }
@@ -297,10 +304,11 @@
         });
       }
       // function
-      function uploadFile(file,newNameNoMime) {
+      function uploadFile(file, newNameNoMime) {
         return new Promise(function (res, rej) {
           var newFileName =
-          newNameNoMime||Date.now() + file.name.slice(file.name.lastIndexOf("."));
+            newNameNoMime ||
+            Date.now() + file.name.slice(file.name.lastIndexOf("."));
           cos.putObject(
             {
               Bucket: "blog-1256270265",
@@ -334,10 +342,28 @@
         }
         return Promise.all(compressedFilesProms).then(function (files) {
           return Promise.all(
-            files.map(function (file,index) {
-              return uploadFile(file,Date.now()+""+index);
+            files.map(function (file, index) {
+              return uploadFile(file, Date.now() + "" + index);
             }),
           );
+        });
+      }
+      //将新文章主动发送百度收录
+      function sendNewLinkToBaidu(articleId) {
+        return fetch(
+          "http://data.zz.baidu.com/urls?site=https://www.tech-share.cn&token=C8nsWaxDq7sl4P0h",
+          {
+            method: "post",
+            headers: {
+              "User-Agent": "curl/7.12.1",
+              Host: "data.zz.baidu.com",
+              "Content-Type": "text/plain",
+              "Content-Length": 83,
+            },
+            body: "https://www.tech-share.cn/article/" + articleId,
+          },
+        ).then(function (response) {
+          return response.json();
         });
       }
     </script>
