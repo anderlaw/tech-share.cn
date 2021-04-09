@@ -59,6 +59,7 @@ module.exports = {
               if (!labelParam) {
                 res.send({
                   success: true,
+                  articleId:result[0].insertId
                 });
                 return;
               }
@@ -72,6 +73,8 @@ module.exports = {
                   if (error) throw error;
                   res.send({
                     success: true,
+                    
+                  articleId:result[0].insertId
                   });
                 },
               );
@@ -82,6 +85,8 @@ module.exports = {
           if (!labelParam) {
             res.send({
               success: true,
+              
+              articleId:result[0].insertId
             });
             return;
           }
@@ -95,6 +100,8 @@ module.exports = {
               if (error) throw error;
               res.send({
                 success: true,
+                
+                articleId:result[0].insertId
               });
             },
           );
