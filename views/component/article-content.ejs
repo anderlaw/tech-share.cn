@@ -63,20 +63,38 @@
   </style>
     <article class="article-content">
       <h1 class="article-name">
-        <%= article.title %>
+        <span><%= article.title %></span>
+        <% if(isLogged){ %>
+          <button class="link" style="float: right;">
+            <a onclick="cacheContentDirectToUpdate()">修改</a>
+          </button>
+          <script>
+            //点击写入sessionStorage
+            function cacheContentDirectToUpdate(){
+              //标题
+              sessionStorage.setItem('article_title',`<%= article.title %>`)
+              //类别
+              sessionStorage.setItem('article_category_code',`<%= article.category_code %>`)
+              // 描述
+              sessionStorage.setItem('article_description',`<%= article.description %>`)
+              //内容
+              sessionStorage.setItem('article_content_html',`<%- article.content.replace(/\[imgBaseUrl\]/g,imgBaseUrl) %>`);
+
+              location.href = location.protocol + "//"+location.host+"/manage/update-post?id=<%= article.id %>"
+            }
+          </script>
+        <% } %>
       </h1>
       <p class="article-desc">
         <%= article.description %>
       </p>
       <!-- 文章内容 -->
-      <%- article.content.replace(/contenteditable\S+/,"").replace(/\[imgBaseUrl\]/g,imgBaseUrl) %>
+      <%- article.content.replace(/contenteditable\="[^"]+/g,"").replace(/\[imgBaseUrl\]/g,imgBaseUrl) %>
       <div id="article-catalog">
         <h4 class="catalog-title">目录</h4>
         <div class="catalog-body"></div>
       </div>
     </article>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
-    <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script>
       generate();
       function generate() {
@@ -177,3 +195,4 @@
         }
       });
     </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>

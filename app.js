@@ -43,6 +43,14 @@ app.get('/manage/create-post',(req,res)=>{
     res.redirect("/login");
   }
 })
+// 文章修改页面
+app.get('/manage/update-post',(req,res)=>{
+  if(res.locals.isLogged){
+    res.sendFile(path.resolve('./pages/update-post.html'))
+  }else{
+    res.redirect("/login");
+  }
+})
 // 专栏发布页面
 app.get('/manage/create-column',(req,res)=>{
   if(res.locals.isLogged){

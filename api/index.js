@@ -6,6 +6,7 @@ const pool = require("../secret/sql_pool");
 // handler
 const userLogin = require('./handler/user-handler').login;
 const createArticle  = require('./handler/article-handler').create
+const updateArticle  = require('./handler/article-handler').update
 const createColumn  = require('./handler/column-handler').create
 const upload = multer({
   storage: multer.diskStorage({
@@ -23,6 +24,8 @@ const upload = multer({
 //分类列表
 // article post
 router.post("/article",createArticle);
+// article update
+router.put("/article",updateArticle);
 // column post
 router.post("/column",createColumn);
 //获取专栏下拉框数据

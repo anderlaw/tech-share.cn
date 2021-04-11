@@ -4,8 +4,8 @@ module.exports = {
   create(req, res, next) {
     //先解析formdata数据
     new multiparty.Form().parse(req, (err, fields, files) => {
-      const title = fields.title[0];
-      const description = fields.description[0];
+      const title = JSON.stringify(fields.title[0]);
+      const description = JSON.stringify(fields.description[0]);
       const content = JSON.stringify(fields.content[0]); //此处再外层添加双引号，同时转义里面的双引号，拼接sql时免引号。
       const category_code = fields.category_code[0];
       const covername = fields.covername[0];
@@ -15,7 +15,7 @@ module.exports = {
       const articleSql = new Promise((resolve) => {
         pool.query(
           `insert into article ( title, description,content,postdate,covername,category_code) VALUES(` +
-            `"${title}","${description}",${content},CURRENT_TIMESTAMP,"${covername}","${category_code}"` +
+            `${title},${description},${content},CURRENT_TIMESTAMP,"${covername}","${category_code}"` +
             `)`,
           (error, results, fields) => {
             if (error) throw error;
@@ -109,4 +109,28 @@ module.exports = {
       });
     });
   },
+  update(req,res,next){
+    //先解析formdata数据
+    new multiparty.Form().parse(req, (err, fields, files) => {
+      const id = fields.id[0];
+      const title = JSON.stringify(fields.title[0]);
+      const description = JSON.stringify(fields.description[0]);
+      const content = JSON.stringify(fields.content[0]); //此处再外层添加双引号，同时转义里面的双引号，拼接sql时免引号。
+      const category_code = fields.category_code[0];
+      //插入数据到article表中
+      const articleSql = new Promise((resolve) => {
+        pool.query(
+          `update article set title = ${title},description=${description},content=${content},category_code="${category_code}"
+          where id=${id}`,
+          (error, results, fields) => {
+            if (error) throw error;
+            resolve(results);
+            res.send({
+              success: true,
+            });
+          },
+        );
+      });
+    });
+  }
 };
