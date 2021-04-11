@@ -28,6 +28,11 @@
           <li>
             <a href="/project/index.html" target="new_window">个人作品</a>
           </li>
+          <% if(isLogged) {%>
+            <li>
+              <a href="/manage/create-post">发布文章</a>
+            </li>
+          <% }%>
         </ul>
       </nav>
     </section>
