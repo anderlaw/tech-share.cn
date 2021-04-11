@@ -121,6 +121,7 @@ module.exports = {
       const articleSql = new Promise((resolve) => {
         pool.query(
           `update article set title = ${title},description=${description},content=${content},category_code="${category_code}"
+          udpatedate=CURRENT_TIMESTAMP
           where id=${id}`,
           (error, results, fields) => {
             if (error) throw error;
