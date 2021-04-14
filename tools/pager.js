@@ -46,7 +46,7 @@ module.exports = function({
   }
   
   const backHtmlStr = hasPrev ? `<a href="${url_heading}&current_page=${current_page-1}" class="page-item back"></a>`:``;
-  const forwardHtmlStr = hasNext ? `<a href="${url_heading}current_page=${current_page+1}" class="page-item forward"></a>`:``;
+  const forwardHtmlStr = hasNext ? `<a href="${url_heading}&current_page=${current_page+1}" class="page-item forward"></a>`:``;
   return backHtmlStr+pageHtmlStr+forwardHtmlStr;
 
 }
