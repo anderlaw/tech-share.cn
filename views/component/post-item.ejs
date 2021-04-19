@@ -38,7 +38,10 @@
       
     </div>
     <div class="right">
-      <img src="<%= imgBaseUrl + post.covername %>" alt="">
+      <% if(post.covername) {%>
+        <img src="<%= imgBaseUrl + post.covername %>" alt="">
+      <% } %>
+      
     </div>
   </div>
 </article>
