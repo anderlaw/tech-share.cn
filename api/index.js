@@ -8,6 +8,7 @@ const userLogin = require('./handler/user-handler').login;
 const createArticle  = require('./handler/article-handler').create
 const updateArticle  = require('./handler/article-handler').update
 const createColumn  = require('./handler/column-handler').create
+const recordVisit = require('./handler/statistic-handler').recordVisit;
 const upload = multer({
   storage: multer.diskStorage({
     destination: path.resolve("./static/files"),
@@ -21,15 +22,8 @@ const upload = multer({
 });
 // 用户校验中间件，检查header里的cookie
 
-//测试远程的IP地址
-router.get('/ip',(req,res)=>{
-  // console.log(req.headers['x-forwarded-for'] || // 判断是否有反向代理 IP
-  // req.connection.remoteAddress || // 判断 connection 的远程 IP
-  // req.socket.remoteAddress || // 判断后端的 socket 的 IP
-  // req.connection.socket.remoteAddress)
-  console.log(req.socket.localAddress)
-  console.log(req.socket.remoteAddress)
-})
+//记录文章阅读：新建唯一远程IP和文章id的记录
+router.get('/record',recordVisit)
 //分类列表
 // article post
 router.post("/article",createArticle);

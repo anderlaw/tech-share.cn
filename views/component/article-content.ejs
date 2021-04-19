@@ -85,6 +85,24 @@
           </script>
         <% } %>
       </h1>
+      <p style="color: #777;font-size: 12px;line-height: 22px;">
+        <% if(article.updatedate) {%>
+          <span>
+            更新于：
+            <%= new Date(article.updatedate).toLocaleString() %> 
+          </span>
+        <% }else{%>
+          <span >
+            发布于：
+            <%= new Date(article.postdate).toLocaleString() %> 
+          </span>
+        <% }%>
+
+          <span>
+            &nbsp;
+            阅读（<%= article.viewcount %>）
+          </span>
+      </p>
       <p class="article-desc">
         <%= article.description %>
       </p>
@@ -193,6 +211,12 @@
         } else {
           catalogEle.classList.remove("sticky");
         }
+      });
+
+      // 访客记录
+      var articleId = location.href.match(/article\/(\d+)/)[1];
+      fetch("/api/record?articleId="+articleId,{
+        method:"get"
       });
     </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
