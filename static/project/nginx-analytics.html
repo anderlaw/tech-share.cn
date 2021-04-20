@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nginx日志分析、处理工具</title>
+  <style>
+    body *{
+      user-select: none;
+    }
+    td{
+      user-select: text;
+    }
+    
+    table{
+      margin-top: 40px;
+      border-collapse: collapse;
+    }
+    td,th{
+      overflow: auto;
+      border: 1px solid #ccc;
+      max-width: 400px;
+      padding: 6px 8px;
+    }
+  </style>
+</head>
+<body>
+  <p>
+    <span style="color: red;">*性能考虑，请勿添加超过1万条记录的日志文件</span>
+  </p>
+  <p>
+    <label for="">
+      nginx日志文件：
+      <input type="file" onchange="handleFileChange(this)">
+    </label>
+  </p>
+  <p>
+    <label for="filter-IP">IP地址：<input id="filter-IP" type="text" oninput="handleInput(this)"></label>
+  </p>
+  <p>
+    <label for="filter-date">起始日期：<input id="filter-date" type="date" onchange="handleFilterChange(this,'date')"></label>
+  </p>
+  <label for="group-btn">统计分组：<input id="group-btn" type="checkbox" onchange="handleFilterChange(this,'group')">IP分组</label>
+  <table class="main">
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>URL</th>
+        <th>访问日期</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  <table class="group" style="display: none;">
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Times（请求次数）</th>
+        <th>first Date（初次请求日期）</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  <script>
+    let originalData;
+    let filteredData;
+    let groupedStatus = document.querySelector('#group-btn').checked;
+    //过滤条件
+    let date;
+    let IP;
+    let inputTimer = null;
+    function handleInput(target){
+      //ip过滤
+      IP = target.value;
+      clearTimeout(inputTimer);
+      inputTimer = setTimeout(()=>{
+        //过滤数据
+        filterData()
+        //渲染数据
+        renderData();
+      },400)
+    }
+    function handleFilterChange(target,type){
+      if(type === 'date'){
+        //日期//类似：2017-07-01
+        date = target.value;
+      }else if(type === 'group'){
+        //分组
+        groupedStatus = document.querySelector('#group-btn').checked;
+      }
+      //过滤数据
+      filterData()
+      //渲染数据
+      renderData();
+    }
+    function filterData(){
+      filteredData = originalData
+      //IP
+      IP && (filteredData = filteredData.filter(item => item.IP.indexOf(IP.trim()) === 0))
+      //date
+      date && (filteredData = filteredData.filter(item => new Date(item.Date) >= new Date(date)))
+    }
+    function handleFileChange(inputEle){
+      //清空
+      const file = inputEle.files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = function(ev){
+        const originalTxt = ev.target.result;
+        const finalTxtArr = extractDataFromTxt(originalTxt);
+        //记录原始数据
+        originalData  = finalTxtArr;
+        //针对已有的过滤条件对新日志数据过滤
+        filterData()
+        renderData()
+      }
+      fileReader.readAsText(file);
+    }
+    function extractDataFromTxt(txt){
+      //利用正则进行分析,先取出所有匹配，然后再切割
+      // const anaReg = /^\d+\.\d+\.\d+\.\d+\s-\s-\s\[[^\]]+\]\s"[^"]+"/mg;
+      // const matchRes = txt.match(anaReg);
+      // //匹配结果进行二次匹配
+      // const resData = matchRes.map(itemString=>{
+      //   //itemString类似： '167.248.133.38 - - [13/Nov/2020:10:20:18 +0800] "GET / HTTP/1.1"',
+      //   const regPars = itemString.match(/(\d+\.\d+\.\d+\.\d+)\s-\s-\s\[([^\]]+)\]\s"([^"]+)/);
+      //   return {
+      //     IP:regPars[1],
+      //     Date:convertDateToTimestamp(regPars[2].slice(0,20)),
+      //     URL:regPars[3]
+      //   }
+      // })
+      
+      
+      //使用matchAll方法，返回一个迭代器
+      const catchAllReg = /^(\d+\.\d+\.\d+\.\d+)\s-\s-\s\[([^\]]+)\]\s"([^"]+)"/mg;
+      const resData = [];
+      for(const match of txt.matchAll(catchAllReg)){
+        resData.push({
+          IP:match[1],
+          Date:convertDateToTimestamp(match[2].slice(0,20)),
+          URL:match[3]
+        })
+      }
+      function convertDateToTimestamp(nginxDataStr){
+        var monthMap = {
+          Jan:"01",
+          Feb:"02",
+          Mar:"03",
+          Apr:"04",
+          May:"05",
+          Jun:"06",
+          Jul:"07",
+          Aug:"08",
+          Sep:"09",
+          Oct:"10",
+          Nov:"11",
+          Dec:"12"
+        }
+        var yearArr = nginxDataStr.split(":")[0].split("/").reverse();
+        yearArr[1] = monthMap[yearArr[1]];
+        var timeStr = nginxDataStr.split(":").slice(1,4).join(":");
+        return yearArr.join('-') + ' ' + timeStr;
+      }
+      return resData;
+    }
+    function renderData(){
+      if(groupedStatus){
+        document.querySelector('table.group').style.display = "block"
+        document.querySelector('table.main').style.display = "none"
+        renderGroupTable()
+      }else{
+        document.querySelector('table.main').style.display = "block"
+        document.querySelector('table.group').style.display = "none"
+        renderMainTable()
+      }
+      function renderMainTable(){
+        const resHtml = filteredData.map(item => {
+          return `<tr>
+            <td>${item.IP}</td>
+            <td>${item.URL}</td>
+            <td>${item.Date}</td>
+          </tr>`
+        }).join("");
+        document.querySelector('.main > tbody').innerHTML = resHtml
+      }
+      function renderGroupTable(){
+        const groupedData = [];
+        const IP_countObj = {};
+        const IP_dateObj = {};
+        filteredData.forEach(item => {
+          if(!(item.IP in IP_countObj)){
+            IP_countObj[item.IP] = 0;
+            IP_dateObj[item.IP] = item.Date;
+          }
+          IP_countObj[item.IP]++;
+        });
+
+        for(let IP in IP_countObj){
+          groupedData.push({
+            IP,
+            times:IP_countObj[IP],
+            firstDate:IP_dateObj[IP]
+          })
+        }
+        //降序排列
+        groupedData.sort(function(a,b){
+          return b.times-a.times;
+        })
+        const resHtml = groupedData.map(item => {
+          return `<tr>
+            <td>${item.IP}</td>
+            <td>${item.times}</td>
+            <td>${item.firstDate}</td>
+          </tr>`
+        }).join("");
+        document.querySelector('.group > tbody').innerHTML = resHtml
+      }
+    }
+  </script>
+</body>
+</html>
