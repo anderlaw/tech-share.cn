@@ -5,10 +5,11 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const compression = require('compression');
 const userAuth = require('./api/handler/user-handler').authUser;
+app.use(compression());//开启gzip压缩
 app.use(express.static('static'))
 app.use(cookieParser())
 app.use(userAuth)
-app.use(compression());//开启gzip压缩
+
 
 //此处处理老版URL的301
 app.use(function forceLiveDomain(req, res, next) {
