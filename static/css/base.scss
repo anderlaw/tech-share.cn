@@ -10,3 +10,16 @@ button.link {
     text-decoration: none;
   }
 }
+// 友情链接样式
+.friendly-link-box {
+  max-width: 900px;
+  margin: 0 auto;
+  margin-top: 30px;
+  box-sizing: border-box;
+  .title{
+    color: #3c97e6;
+  }
+  a{
+    color: #efa465;
+  }
+}
